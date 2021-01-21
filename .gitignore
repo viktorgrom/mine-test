@@ -1,0 +1,16 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.idea/
+app/local.properties
+*.apk
+app/release/
+app/standalone/
+app/google/
+app/google-services.json
+proprietary/google-services.json

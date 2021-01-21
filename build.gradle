@@ -1,0 +1,28 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        google()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10'
+
+        if (System.getenv('IS_GOOGLE_BUILD')) {
+            classpath 'com.google.gms:google-services:4.3.4'
+            classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

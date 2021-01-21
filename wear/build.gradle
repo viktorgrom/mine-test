@@ -1,0 +1,102 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        // versionCode and versionName must be hardcoded to support F-droid
+        versionCode 807001
+        versionName '8.7.0'
+        applicationId 'dev.lucasnlm.antimine'
+        minSdkVersion 23
+        targetSdkVersion 30
+        vectorDrawables.useSupportLibrary true
+        resConfigs 'af-rZA', 'ar-rSA', 'ca-rES', 'cs-rCZ', 'da-rDK', 'de-rDE', 'el-rGR', 'en-rUS',
+                   'es-rES', 'fi-rFI', 'fr-rFR', 'hi-rIN', 'hu-rHU', 'it-rIT', 'iw-rIL', 'ja-rJP',
+                   'ko-rKR', 'nl-rNL', 'no-rNO', 'pl-rPL', 'pt-rBR', 'pt-rPT', 'ro-rRO', 'ru-rRU',
+                   'sv-rSE', 'th-rTH', 'tr-rTR', 'uk-rUA', 'vi-rVN', 'zh-rCN', 'bg-rBG', 'in-rID'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    signingConfigs {
+        release {
+            if (System.getenv('IS_RELEASE_BUILD')) {
+                storeFile file(System.getenv('KEYSTORE'))
+                keyAlias System.getenv('KEY_ALIAS')
+                storePassword System.getenv('KEY_STORE_PASSWORD')
+                keyPassword System.getenv('KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+dependencies {
+    // Dependencies must be hardcoded to support F-droid
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':external')
+    implementation project(':foss')
+    implementation project(':common')
+    implementation project(':ui')
+    implementation project(':preferences')
+    implementation project(':core')
+
+    // Constraint
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-beta01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.activity:activity-ktx:1.1.0'
+
+    // Wear OS
+    implementation 'androidx.wear:wear:1.1.0'
+    implementation 'com.google.android.gms:play-services-wearable:17.0.0'
+    implementation 'com.google.android.support:wearable:2.8.1'
+    compileOnly 'com.google.android.wearable:wearable:2.8.1'
+
+    // Koin
+    implementation 'org.koin:koin-android:2.2.1'
+    implementation 'org.koin:koin-androidx-viewmodel:2.2.1'
+    testImplementation 'org.koin:koin-test:2.2.1'
+
+    // Kotlin
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10'
+}

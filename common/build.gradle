@@ -1,0 +1,107 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+}
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        // versionCode and versionName must be hardcoded to support F-droid
+        versionCode 807001
+        versionName '8.7.0'
+        minSdkVersion 21
+        targetSdkVersion 30
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs += [
+                '-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi',
+                '-Xuse-experimental=kotlinx.coroutines.FlowPreview']
+    }
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+dependencies {
+    // Dependencies must be hardcoded to support F-droid
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':core')
+    implementation project(':external')
+    implementation project(':i18n')
+    implementation project(':preferences')
+    implementation project(':ui')
+
+    // AndroidX
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-beta01'
+    implementation 'androidx.activity:activity-ktx:1.1.0'
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
+
+    // Constraint
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    // Lifecycle
+    api 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'android.arch.lifecycle:viewmodel:1.1.1'
+
+    // Koin
+    implementation 'org.koin:koin-android:2.2.1'
+    implementation 'org.koin:koin-androidx-viewmodel:2.2.1'
+    testImplementation 'org.koin:koin-test:2.2.1'
+
+    // Room
+    api 'androidx.room:room-runtime:2.2.5'
+    api 'androidx.room:room-ktx:2.2.5'
+    kapt 'androidx.room:room-compiler:2.2.5'
+    testImplementation 'androidx.room:room-testing:2.2.5'
+
+    // Moshi - Json
+    api 'com.squareup.moshi:moshi:1.11.0'
+    api 'com.squareup.moshi:moshi-kotlin:1.11.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.11.0'
+
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
+
+    // Kotlin Lib
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10'
+
+    // Unit Tests
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.mockito:mockito-core:2.24.0'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+    testImplementation "io.mockk:mockk:1.10.3"
+
+    // Core library
+    androidTestImplementation 'androidx.test:core:1.2.0'
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestUtil 'androidx.test:orchestrator:1.2.0'
+}
+
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+    }
+    afterTest { desc, result ->
+        println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+}

@@ -1,0 +1,186 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+}
+
+if (System.getenv('IS_GOOGLE_BUILD')) {
+    apply plugin: 'com.google.firebase.crashlytics'
+}
+
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        // versionCode and versionName must be hardcoded to support F-droid
+        versionCode 807001
+        versionName '8.7.0'
+        minSdkVersion 21
+        targetSdkVersion 30
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary true
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+        resConfigs 'af-rZA', 'ar-rSA', 'ca-rES', 'cs-rCZ', 'da-rDK', 'de-rDE', 'el-rGR', 'en-rUS',
+                   'es-rES', 'fi-rFI', 'fr-rFR', 'hi-rIN', 'hu-rHU', 'it-rIT', 'iw-rIL', 'ja-rJP',
+                   'ko-rKR', 'nl-rNL', 'no-rNO', 'pl-rPL', 'pt-rBR', 'pt-rPT', 'ro-rRO', 'ru-rRU',
+                   'sv-rSE', 'th-rTH', 'tr-rTR', 'uk-rUA', 'vi-rVN', 'zh-rCN', 'bg-rBG', 'in-rID'
+    }
+
+    signingConfigs {
+        release {
+            if (System.getenv('IS_RELEASE_BUILD')) {
+                storeFile file(System.getenv('KEYSTORE'))
+                keyAlias System.getenv('KEY_ALIAS')
+                storePassword System.getenv('KEY_STORE_PASSWORD')
+                keyPassword System.getenv('KEY_PASSWORD')
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs += [
+                '-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi',
+                '-Xuse-experimental=kotlinx.coroutines.FlowPreview']
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources true
+            animationsDisabled true
+        }
+    }
+
+    flavorDimensions 'version'
+    productFlavors {
+        google {
+            dimension 'version'
+            applicationId 'dev.lucasnlm.antimine'
+        }
+
+        googleInstant {
+            dimension 'version'
+            applicationId 'dev.lucasnlm.antimine'
+        }
+
+        foss {
+            dimension 'version'
+            // There's a typo on F-Droid release :(
+            applicationId 'dev.lucanlm.antimine'
+        }
+    }
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+dependencies {
+    // Dependencies must be hardcoded to support F-droid
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':external')
+    implementation project(':common')
+    implementation project(':control')
+    implementation project(':about')
+    implementation project(':ui')
+    implementation project(':preferences')
+    implementation project(':themes')
+    implementation project(':purchases')
+    implementation project(':core')
+
+    googleImplementation project(':proprietary')
+    googleInstantImplementation project(':proprietary')
+    fossImplementation project(':foss')
+
+    // AndroidX
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-beta01'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.activity:activity-ktx:1.1.0'
+    implementation 'androidx.fragment:fragment-ktx:1.2.5'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    // Lifecycle
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
+
+    // Room
+    implementation 'androidx.room:room-ktx:2.2.6'
+
+    // Constraint
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+
+    // Google
+    implementation 'com.google.android.material:material:1.2.1'
+
+    // Koin
+    implementation 'org.koin:koin-android:2.2.1'
+    implementation 'org.koin:koin-androidx-viewmodel:2.2.1'
+    testImplementation 'org.koin:koin-test:2.2.1'
+
+    // Kotlin
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.4.10'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
+
+    // Tests
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'android.arch.core:core-testing:1.1.1'
+    testImplementation 'androidx.core:core-ktx:1.1.0'
+    testImplementation 'androidx.test:core:1.2.0'
+    testImplementation 'androidx.test:core-ktx:1.2.0'
+    testImplementation 'androidx.test:rules:1.2.0'
+    testImplementation 'androidx.test:runner:1.2.0'
+    testImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation 'androidx.test.espresso:espresso-contrib:3.3.0'
+    testImplementation 'androidx.fragment:fragment-testing:1.2.5'
+    testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'androidx.test.ext:junit:1.1.2'
+    testImplementation 'io.mockk:mockk:1.10.0'
+
+    // Core library
+    androidTestImplementation 'androidx.test:core:1.2.0'
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.core:core-ktx:1.1.0'
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'androidx.test:core-ktx:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestUtil 'androidx.test:orchestrator:1.2.0'
+}
+
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat 'full'
+    }
+    afterTest { desc, result ->
+        println "Executing test ${desc.name} [${desc.className}] with result: ${result.resultType}"
+    }
+}
