@@ -35,13 +35,7 @@ class AboutInfoFragment : Fragment(R.layout.fragment_about_info) {
             }
         }
 
-        thirdsParties.setOnClickListener {
-            aboutViewModel.sendEvent(AboutEvent.ThirdPartyLicenses)
-        }
 
-        sourceCode.setOnClickListener {
-            aboutViewModel.sendEvent(AboutEvent.SourceCode)
-        }
 
         translation.setOnClickListener {
             aboutViewModel.sendEvent(AboutEvent.Translators)

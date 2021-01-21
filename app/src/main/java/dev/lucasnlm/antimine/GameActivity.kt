@@ -59,14 +59,14 @@ import dev.lucasnlm.external.IInstantAppManager
 import dev.lucasnlm.external.IFeatureFlagManager
 import dev.lucasnlm.external.IPlayGamesManager
 import dev.lucasnlm.external.ReviewWrapper
-import dev.lucasnlm.external.model.PurchaseInfo
+
 import kotlinx.android.synthetic.main.activity_game.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
+
 import kotlinx.coroutines.flow.singleOrNull
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -115,13 +115,12 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 
         bindViewModel()
-        bindPlayGames()
+
         bindToolbar()
         bindDrawer()
         bindNavigationMenu()
         bindSwitchControlButton()
-        bindAds()
-        bindPrice()
+
 
         findViewById<FrameLayout>(R.id.levelContainer).doOnLayout {
             if (!isFinishing) {
@@ -136,20 +135,7 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
         onOpenAppActions()
     }
 
-    private fun bindPlayGames() {
-        lifecycleScope.launch {
-            withContext(Dispatchers.IO) {
-                silentGooglePlayLogin()
-            }
 
-            withContext(Dispatchers.Main) {
-                if (!isFinishing) {
-                    invalidateOptionsMenu()
-                    playGamesManager.showPlayPopUp(this@GameActivity)
-                }
-            }
-        }
-    }
 
     private fun bindViewModel() = gameViewModel.apply {
         Transformations
@@ -262,7 +248,7 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
                 analyticsManager.sentEvent(Analytics.Resume)
             }
 
-            refreshAds()
+
         }
     }
 
@@ -465,14 +451,14 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
                 R.id.control -> showControlDialog()
                 R.id.about -> showAbout()
                 R.id.settings -> showSettings()
-                R.id.rate -> openRateUsLink()
+
                 R.id.themes -> openThemes()
-                R.id.share_now -> shareCurrentGame()
+
                 R.id.previous_games -> openSaveHistory()
                 R.id.stats -> openStats()
-                R.id.play_games -> googlePlay()
+
                 R.id.translation -> openCrowdIn()
-                R.id.remove_ads -> showSupportAppDialog()
+
                 R.id.tutorial -> loadGameTutorial()
                 else -> handled = false
             }
@@ -486,14 +472,11 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
 
         navigationView.menu.apply {
             val isNotInstant = !instantAppManager.isEnabled(applicationContext)
-            findItem(R.id.share_now).isVisible = isNotInstant
             findItem(R.id.remove_ads).isVisible = !preferencesRepository.isPremiumEnabled() && isNotInstant
             findItem(R.id.previous_games).isVisible = featureFlagManager.isGameHistoryEnabled
-            findItem(R.id.rate).isVisible = featureFlagManager.isRateUsEnabled
 
-            if (!playGamesManager.hasGooglePlayGames()) {
-                removeGroup(R.id.play_games_group)
-            }
+
+
         }
     }
 
@@ -511,7 +494,7 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
 
             if (current >= MIN_USAGES_TO_IAP && shouldRequestSupport) {
                 analyticsManager.sentEvent(Analytics.UnlockIapDialog)
-                showSupportAppDialog()
+
             }
 
             reviewWrapper.startInAppReview(this)
@@ -733,14 +716,14 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
             Event.ResumeGame -> {
                 status = Status.Running
                 refreshInGameShortcut()
-                refreshAds()
+
             }
             Event.StartNewGame -> {
                 gameToast?.cancel()
                 loadGameFragment()
                 status = Status.PreGame
                 disableShortcutIcon()
-                refreshAds()
+
             }
             Event.Resume, Event.Running -> {
                 status = Status.Running
@@ -882,97 +865,10 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
         }
 
         bindSwitchControlButton()
-        refreshAds()
+
     }
 
-    private fun bindAds() {
-        refreshAds()
 
-        if (!preferencesRepository.isPremiumEnabled()) {
-            lifecycleScope.launchWhenCreated {
-                billingManager.listenPurchases().collect {
-                    if (it is PurchaseInfo.PurchaseResult) {
-                        if (it.unlockStatus && !isFinishing) {
-                            refreshAds()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun bindPrice() {
-        if (billingManager.isEnabled() && !preferencesRepository.isPremiumEnabled()) {
-            billingManager.start()
-
-            lifecycleScope.launchWhenResumed {
-                billingManager.getPrice().collect { price ->
-                    if (price.isNotBlank()) {
-                        try {
-                            navigationView.menu.findItem(R.id.remove_ads).apply {
-                                actionView = TextView(baseContext).apply {
-                                    text = price
-                                    gravity = Gravity.CENTER_VERTICAL
-                                    setTextColor(ContextCompat.getColor(context, R.color.mines_around_2))
-                                    layoutParams = FrameLayout.LayoutParams(
-                                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                                    ).apply {
-                                        gravity = Gravity.CENTER
-                                    }
-                                }
-                            }
-                        } catch (e: Exception) {
-                            Log.e(TAG, "Fail to create price text")
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun refreshAds() {
-        if (featureFlagManager.isInAppAdsEnabled) {
-            val isTutorialComplete = preferencesRepository.isTutorialCompleted()
-            if (isTutorialComplete && !preferencesRepository.isPremiumEnabled() && billingManager.isEnabled()) {
-                if (!instantAppManager.isEnabled(this)) {
-                    navigationView.menu.setGroupVisible(R.id.remove_ads_group, true)
-                    ad_placeholder.visibility = View.VISIBLE
-                    ad_placeholder.loadAd()
-                }
-            } else {
-                navigationView.menu.setGroupVisible(R.id.remove_ads_group, false)
-                ad_placeholder.visibility = View.GONE
-            }
-        } else {
-            ad_placeholder.visibility = View.GONE
-        }
-    }
-
-    private fun silentGooglePlayLogin(): Boolean {
-        return if (playGamesManager.hasGooglePlayGames()) {
-            try {
-                playGamesManager.silentLogin()
-            } catch (e: Exception) {
-                Log.e(TAG, "User not logged in Play Games")
-                false
-            }
-        } else {
-            false
-        }
-    }
-
-    private fun googlePlay() {
-        if (playGamesManager.isLogged()) {
-            if (supportFragmentManager.findFragmentByTag(PlayGamesDialogFragment.TAG) == null) {
-                PlayGamesDialogFragment().show(supportFragmentManager, PlayGamesDialogFragment.TAG)
-            }
-        } else {
-            playGamesManager.getLoginIntent()?.let {
-                ActivityCompat.startActivityForResult(this, it, GOOGLE_PLAY_REQUEST_CODE, null)
-            }
-        }
-    }
 
     private fun openCrowdIn() {
         try {
@@ -982,23 +878,7 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
         }
     }
 
-    private fun showSupportAppDialog() {
-        if (supportFragmentManager.findFragmentByTag(SupportAppDialogFragment.TAG) == null &&
-            !instantAppManager.isEnabled(this)
-        ) {
-            lifecycleScope.launch {
-                if (billingManager.isEnabled()) {
-                    SupportAppDialogFragment.newRemoveAdsSupportDialog(
-                        applicationContext,
-                        billingManager.getPrice().singleOrNull()
-                    ).show(supportFragmentManager, SupportAppDialogFragment.TAG)
-                } else {
-                    SupportAppDialogFragment.newRequestSupportDialog(applicationContext)
-                        .show(supportFragmentManager, SupportAppDialogFragment.TAG)
-                }
-            }
-        }
-    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

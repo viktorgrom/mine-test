@@ -67,25 +67,13 @@
         app:layout_constraintTop_toBottomOf="@+id/version_layout">
 
         <Button
-            android:id="@+id/thirdsParties"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/show_licenses" />
-
-        <Button
             android:id="@+id/translation"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/translation" />
 
-        <Button
-            android:id="@+id/sourceCode"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/source_code" />
+
 
     </LinearLayout>
 

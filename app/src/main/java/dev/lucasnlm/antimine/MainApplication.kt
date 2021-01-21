@@ -8,7 +8,7 @@ import dev.lucasnlm.antimine.core.di.CommonModule
 import dev.lucasnlm.antimine.preferences.IPreferencesRepository
 import dev.lucasnlm.antimine.di.AppModule
 import dev.lucasnlm.antimine.di.ViewModelModule
-import dev.lucasnlm.external.IAdsManager
+
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -17,7 +17,7 @@ open class MainApplication : MultiDexApplication() {
     private val analyticsManager: IAnalyticsManager by inject()
     private val preferencesRepository: IPreferencesRepository by inject()
 
-    private val adsManager: IAdsManager by inject()
+
 
     override fun onCreate() {
         super.onCreate()
@@ -35,6 +35,6 @@ open class MainApplication : MultiDexApplication() {
             preferencesRepository.setPremiumFeatures(true)
         }
 
-        adsManager.start(applicationContext)
+
     }
 }

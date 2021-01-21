@@ -86,28 +86,10 @@
             android:title="@string/events" />
     </group>
 
-    <group android:id="@+id/play_games_group">
-        <item
-            android:id="@+id/play_games"
-            android:checkable="false"
-            android:icon="@drawable/games_controller"
-            android:title="@string/google_play_games" />
-    </group>
+
 
     <group android:id="@+id/other_group">
-        <item
-            android:id="@+id/share_now"
-            android:checkable="false"
-            android:visible="false"
-            android:icon="@drawable/share"
-            android:title="@string/share_menu"
-            tools:visible="true" />
 
-        <item
-            android:id="@+id/rate"
-            android:icon="@drawable/hearth"
-            android:checkable="false"
-            android:title="@string/rating" />
 
         <item
             android:id="@+id/translation"
