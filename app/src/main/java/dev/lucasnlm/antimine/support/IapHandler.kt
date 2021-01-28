@@ -13,17 +13,9 @@ import kotlinx.coroutines.withContext
 class IapHandler(
     private val context: Context,
     private val preferencesManager: IPreferencesRepository,
-    private val billingManager: IBillingManager,
+
 ) {
-    suspend fun start() {
-        billingManager.listenPurchases().collect {
-            if (it is PurchaseInfo.PurchaseResult) {
-                onLockStatusChanged(it.unlockStatus)
-            } else {
-                showFailToConnectFeedback()
-            }
-        }
-    }
+
 
     private fun onLockStatusChanged(status: Boolean) {
         preferencesManager.setPremiumFeatures(status)

@@ -26,7 +26,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        splashViewMode.startIap()
+
 
         lifecycleScope.launchWhenCreated {
             featureFlagManager.refresh()

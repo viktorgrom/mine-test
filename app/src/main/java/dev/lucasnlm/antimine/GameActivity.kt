@@ -26,7 +26,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
-import dev.lucasnlm.antimine.about.AboutActivity
+
 import dev.lucasnlm.antimine.core.models.Difficulty
 import dev.lucasnlm.antimine.common.level.models.Event
 import dev.lucasnlm.antimine.core.models.Score
@@ -46,7 +46,7 @@ import dev.lucasnlm.antimine.gameover.model.GameResult
 import dev.lucasnlm.antimine.level.view.LevelFragment
 import dev.lucasnlm.antimine.playgames.PlayGamesDialogFragment
 import dev.lucasnlm.antimine.preferences.PreferencesActivity
-import dev.lucasnlm.antimine.purchases.SupportAppDialogFragment
+
 import dev.lucasnlm.antimine.share.ShareManager
 import dev.lucasnlm.antimine.splash.SplashActivity
 import dev.lucasnlm.antimine.stats.StatsActivity
@@ -449,10 +449,9 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
                 R.id.expert -> changeDifficulty(Difficulty.Expert)
                 R.id.custom -> showCustomLevelDialog()
                 R.id.control -> showControlDialog()
-                R.id.about -> showAbout()
                 R.id.settings -> showSettings()
 
-                R.id.themes -> openThemes()
+
 
                 R.id.previous_games -> openSaveHistory()
                 R.id.stats -> openStats()
@@ -472,7 +471,6 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
 
         navigationView.menu.apply {
             val isNotInstant = !instantAppManager.isEnabled(applicationContext)
-            findItem(R.id.remove_ads).isVisible = !preferencesRepository.isPremiumEnabled() && isNotInstant
             findItem(R.id.previous_games).isVisible = featureFlagManager.isGameHistoryEnabled
 
 
@@ -586,19 +584,9 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
         }
     }
 
-    private fun showAbout() {
-        analyticsManager.sentEvent(Analytics.OpenAbout)
-        Intent(this, AboutActivity::class.java).apply {
-            startActivity(this)
-        }
-    }
 
-    private fun openThemes() {
-        analyticsManager.sentEvent(Analytics.OpenThemes)
-        Intent(this, ThemeActivity::class.java).apply {
-            startActivity(this)
-        }
-    }
+
+
 
     private fun openSaveHistory() {
         analyticsManager.sentEvent(Analytics.OpenSaveHistory)
@@ -630,7 +618,7 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
     private fun showEndGameDialog(gameResult: GameResult, canContinue: Boolean) {
         val currentGameStatus = status
         if (currentGameStatus is Status.Over && !isFinishing && !drawer.isDrawerOpen(GravityCompat.START)) {
-            if (supportFragmentManager.findFragmentByTag(SupportAppDialogFragment.TAG) == null &&
+            if (
                 supportFragmentManager.findFragmentByTag(EndGameDialogFragment.TAG) == null
             ) {
                 val score = currentGameStatus.score

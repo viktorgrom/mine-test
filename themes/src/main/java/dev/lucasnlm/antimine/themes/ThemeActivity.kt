@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import dev.lucasnlm.antimine.core.cloud.CloudSaveManager
 import dev.lucasnlm.antimine.core.repository.IDimensionRepository
 import dev.lucasnlm.antimine.preferences.IPreferencesRepository
-import dev.lucasnlm.antimine.purchases.SupportAppDialogFragment
+
 import dev.lucasnlm.antimine.themes.view.ThemeAdapter
 import dev.lucasnlm.antimine.themes.viewmodel.ThemeEvent
 import dev.lucasnlm.antimine.themes.viewmodel.ThemeViewModel
@@ -56,13 +56,7 @@ class ThemeActivity : ThematicActivity(R.layout.activity_theme) {
                 adapter = ThemeAdapter(themeViewModel, areaSize, preferencesRepository.squareRadius())
             }
 
-            launch {
-                themeViewModel.observeEvent().collect {
-                    if (it is ThemeEvent.Unlock) {
-                        showUnlockDialog(it.themeId)
-                    }
-                }
-            }
+
 
             launch {
                 themeViewModel.observeState().collect {
@@ -91,17 +85,5 @@ class ThemeActivity : ThematicActivity(R.layout.activity_theme) {
         }
     }
 
-    private fun showUnlockDialog(themeId: Long) {
-        if (supportFragmentManager.findFragmentByTag(SupportAppDialogFragment.TAG) == null) {
-            lifecycleScope.launch {
-                SupportAppDialogFragment.newChangeThemeDialog(
-                    applicationContext,
-                    themeId,
-                    billingManager.getPrice().singleOrNull()
-                ).apply {
-                    show(supportFragmentManager, SupportAppDialogFragment.TAG)
-                }
-            }
-        }
-    }
+
 }

@@ -39,9 +39,7 @@ class FeatureFlagManager : IFeatureFlagManager() {
         getBoolean(RATE_US_ENABLED)
     }
 
-    override val isInAppAdsEnabled: Boolean by lazy {
-        getBoolean(IN_APP_ADS_ENABLED)
-    }
+
 
     override val isGameplayAnalyticsEnabled: Boolean by lazy {
         getBoolean(GAMEPLAY_EVENTS_ENABLED)
@@ -51,9 +49,7 @@ class FeatureFlagManager : IFeatureFlagManager() {
         getBoolean(GAME_OVER_AD_ENABLED)
     }
 
-    override val isAdsOnContinueEnabled: Boolean by lazy {
-        getBoolean(SHOW_ADS_ON_CONTINUE_ENABLED)
-    }
+
 
     override val isContinueGameEnabled: Boolean by lazy {
         getBoolean(CONTINUE_ENABLED)

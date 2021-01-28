@@ -41,7 +41,6 @@ val AppModule = module {
 
     single { ShareManager(get(), get()) }
 
-    single { IapHandler(get(), get(), get()) }
 
     single { CloudSaveManagerImpl(get(), get(), get(), get()) } bind CloudSaveManager::class
 

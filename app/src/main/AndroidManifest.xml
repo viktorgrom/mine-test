@@ -43,8 +43,12 @@
         tools:targetApi="lollipop">
 
         <activity
-            android:name="dev.lucasnlm.antimine.splash.SplashActivity"
-            android:theme="@style/Theme.Splash">
+            android:name="dev.lucasnlm.antimine.GameActivity"
+            android:launchMode="singleTop"
+            android:saveEnabled="false"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/AppTheme.NoActionBar">
 
 
 
@@ -56,12 +60,8 @@
         </activity>
 
         <activity
-            android:name="dev.lucasnlm.antimine.GameActivity"
-            android:launchMode="singleTop"
-            android:saveEnabled="false"
-            android:icon="@mipmap/ic_launcher"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:name="dev.lucasnlm.antimine.splash.SplashActivity"
+            android:theme="@style/Theme.Splash"/>
 
         <activity
             android:name="dev.lucasnlm.antimine.TvGameActivity"

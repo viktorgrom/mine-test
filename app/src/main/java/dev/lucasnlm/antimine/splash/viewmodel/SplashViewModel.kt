@@ -16,13 +16,8 @@ class SplashViewModel(
     private val preferencesRepository: IPreferencesRepository,
     private val statsRepository: IStatsRepository,
     private val saveCloudStorageManager: ICloudStorageManager,
-    private val iapHandler: IapHandler,
+
 ) : ViewModel() {
-    fun startIap() {
-        viewModelScope.launch {
-            iapHandler.start()
-        }
-    }
 
     suspend fun migrateCloudSave(playGamesId: String) {
         saveCloudStorageManager.getSave(playGamesId)?.let { cloudSave ->

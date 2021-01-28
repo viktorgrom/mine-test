@@ -123,7 +123,7 @@ class EndGameDialogFragment : AppCompatDialogFragment() {
                             }
 
                             continueButton.setOnClickListener {
-                                if (featureFlagManager.isAdsOnContinueEnabled &&
+                                if (
                                     !preferencesRepository.isPremiumEnabled()
                                 ) {
                                     showAdsAndContinue()
@@ -160,8 +160,7 @@ class EndGameDialogFragment : AppCompatDialogFragment() {
 
                                 if (state.showContinueButton && featureFlagManager.isContinueGameEnabled) {
                                     continueButton.visibility = View.VISIBLE
-                                    if (!preferencesRepository.isPremiumEnabled() &&
-                                        featureFlagManager.isAdsOnContinueEnabled
+                                    if (!preferencesRepository.isPremiumEnabled()
                                     ) {
                                         continueButton.compoundDrawablePadding = 0
                                         continueButton.setCompoundDrawablesWithIntrinsicBounds(
