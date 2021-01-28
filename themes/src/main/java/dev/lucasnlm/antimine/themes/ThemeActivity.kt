@@ -17,7 +17,6 @@ import dev.lucasnlm.antimine.ui.view.SpaceItemDecoration
 import dev.lucasnlm.external.IBillingManager
 import kotlinx.android.synthetic.main.activity_theme.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel

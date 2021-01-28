@@ -1,7 +1,6 @@
 package dev.lucasnlm.antimine.di
 
 import dev.lucasnlm.antimine.cloud.CloudSaveManagerImpl
-import dev.lucasnlm.antimine.support.IapHandler
 import dev.lucasnlm.antimine.common.BuildConfig
 import dev.lucasnlm.antimine.core.analytics.DebugAnalyticsManager
 import dev.lucasnlm.external.IAnalyticsManager

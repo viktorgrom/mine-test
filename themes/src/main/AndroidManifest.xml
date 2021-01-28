@@ -4,7 +4,7 @@
     <application>
         <activity
             android:label="@string/themes"
-            android:name=".ThemeActivity"
+            android:name="dev.lucasnlm.antimine.themes.ThemeActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme">
             <meta-data

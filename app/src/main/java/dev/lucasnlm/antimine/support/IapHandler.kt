@@ -4,10 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import dev.lucasnlm.antimine.R
 import dev.lucasnlm.antimine.preferences.IPreferencesRepository
-import dev.lucasnlm.external.IBillingManager
-import dev.lucasnlm.external.model.PurchaseInfo
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.withContext
 
 class IapHandler(
