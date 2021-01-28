@@ -37,7 +37,7 @@ import dev.lucasnlm.antimine.core.models.Analytics
 import dev.lucasnlm.antimine.preferences.models.ControlStyle
 import dev.lucasnlm.antimine.preferences.IPreferencesRepository
 import dev.lucasnlm.antimine.custom.CustomLevelDialogFragment
-import dev.lucasnlm.antimine.history.HistoryActivity
+
 import dev.lucasnlm.antimine.gameover.EndGameDialogFragment
 import dev.lucasnlm.antimine.gameover.model.GameResult
 import dev.lucasnlm.antimine.level.view.LevelFragment
@@ -445,7 +445,7 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
 
 
 
-                R.id.previous_games -> openSaveHistory()
+
                 R.id.stats -> openStats()
 
                 R.id.translation -> openCrowdIn()
@@ -580,12 +580,7 @@ class GameActivity : ThematicActivity(R.layout.activity_game), DialogInterface.O
 
 
 
-    private fun openSaveHistory() {
-        analyticsManager.sentEvent(Analytics.OpenSaveHistory)
-        Intent(this, HistoryActivity::class.java).apply {
-            startActivity(this)
-        }
-    }
+
 
     private fun openStats() {
         analyticsManager.sentEvent(Analytics.OpenStats)
